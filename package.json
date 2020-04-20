@@ -1,0 +1,15 @@
+{
+  "name": "cideries-API",
+  "version": "1.0.0",
+  "description": "Canadian Cideries",
+  "main": "index.js",
+  "author": "V.H.Wajda",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.3"
+  }
+}
