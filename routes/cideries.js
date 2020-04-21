@@ -1,62 +1,82 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
+const Joi = require('@hapi/joi');
 
 
-const cideries = [
-  { id: 1, name: 'cider1'},
-  { id: 2, name: 'cider2'},
-  { id: 3, name: 'cider3'}
-];
+const ciderySchema = mongoose.Schema({
+  name: { type: String, required: true },
+  address: String,
+  phoneNum: Number,
+  email: String,
+  website: String,
+  tastingRoom: Boolean,
+  onlineStore: { type: Boolean, default: false },
+  offSales: { type: Boolean, default: false },
+  est: Number,
+  socialMedia: { type: Boolean, default: false },
+});
 
-router.get('/', (req, res) => {
+const Cidery = mongoose.model('Cidery', ciderySchema);
+
+router.get('/', async(req, res) => {
+  const cideries = await Cidery.find().sort('name');
   res.send(cideries);
 });
 
-router.get('/:id', (req, res) => {
-  const cidery = cideries.find(cidery => cidery.id === parseInt(req.params.id));
+router.get('/:id', async(req, res) => {
+  const cidery = await Cidery.findById(req.params.id)
+
   if(!cidery) return res.status(404).send('not found');
+
   res.send(cidery);
 });
 
-router.post('/', (req, res) => {
+router.post('/', async(req, res) => {
 
   const { error } = validationCheck(req.body);
-
   if(error) return res.status(400).send(error.details[0]);
 
-  const cidery = {
-    id: cideries.length + 1,
-    name: req.body.name
+  let cidery = new Cidery({
+    name: req.body.name,
+    address: req.body.address,
+    phoneNum: req.body.phoneNum
+  })
+
+  cidery = await cidery.save();
+  res.send(cidery);
+});
+
+router.put('/:id', async(req, res) => {
+  const { error } = validationCheck(req.body);
+  if(error) return res.status(400).send(error.details[0]);
+
+  try{
+    const cidery = await Cidery.findByIdAndUpdate(
+      req.params.id,
+      { name: req.body.name },
+      { new: true });
+  }
+  catch(err) {
+    return res.status(404).send(`Cidery with id ${req.params.id} was not found`);
   }
 
-  cideries.push(cidery);
   res.send(cidery);
 });
 
-router.put('/:id', (req, res) => {
-  const cidery = cideries.find(cidery => cidery.id === parseInt(req.params.id));
+router.delete('/:id', async(req, res) => {
+  const cidery = await Cidery.findByIdAndRemove(req.params.id)
+
   if(!cidery) return res.status(404).send('not found');
-
-  const { error } = validationCheck(req.body);
-  if(error) return res.status(400).send(error.details[0]);
-
-  cidery.name = req.body.name;
-  res.send(cidery);
-});
-
-router.delete('/:id', (req, res) => {
-  const cidery = cideries.find(cidery => cidery.id === parseInt(req.params.id));
-  if(!cidery) return res.status(404).send('not found');
-
-  const index = cideries.indexOf(cidery);
-  cideries.splice(index, 1);
 
   res.send(cidery);
 });
 
 const validationCheck = (args) => {
   const schema = Joi.object().keys({
-    name: Joi.string().min(3).required()
+    name: Joi.string().min(3).required(),
+    address: Joi.string(),
+    phoneNum: Joi.number()
   });
 
   return schema.validate(args);

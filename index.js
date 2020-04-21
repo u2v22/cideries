@@ -17,21 +17,6 @@ app.use(express.json());
 app.use('/api/cideries', cideries);
 app.use('/api/flavourProfiles', flavourProfiles);
 
-const ciderySchema = new mongoose.Schema({
-  name: String,
-  address: String,
-  phoneNum: Number,
-  email: String,
-  website: String,
-  tastingRoom: Boolean,
-  onlineStore: { type: Boolean, default: false },
-  offSales: { type: Boolean, default: false },
-  est: Number,
-  socialMedia: { type: Boolean, default: false },
-});
-
-const Cidery = mongoose.model('Cidery', ciderySchema);
-
 async function createCidery() {
   const cidery = new Cidery({
     name: 'Vees Cidery',
@@ -46,12 +31,23 @@ async function createCidery() {
     socialMedia: true,
   });
 
-
-  const result = await cidery.save();
-  console.log(result);
+  try {
+    const result = await cidery.save();
+    console.log(result);
+  }
+  catch(err) {
+    console.log(err);
+  }
 }
 
-createCidery();
+async function findCideries(){
+  const cideries = await Cidery
+  .find()
+  .sort({ name: 1 })
+  console.log(cideries);
+}
+
+findCideries();
 
 const port = process.env.PORT || 3000;
 

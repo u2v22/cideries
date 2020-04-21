@@ -1,31 +1,32 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
+const Joi = require('@hapi/joi');
 
-const flavorProfiles = [
-  { id: 1, name: 'apple'},
-  { id: 2, name: 'rhubarb'},
-  { id: 3, name: 'pear'}
-];
 
-router.get('/', (req, res) => {
-  res.send(flavorProfiles);
+const flavoursSchema = mongoose.Schema({
+  flavourProfile: { type: String, required: true }
 });
 
-router.post('/', (req, res) => {
+const FlavourProfiles = mongoose.model('FlavourProfile', flavoursSchema);
 
+router.get('/', async(req, res) => {
+  const fps = await FlavourProfiles.find();
+  res.send(fps);
+});
+
+
+router.post('/', async(req, res) => {
   const { error } = validationCheck(req.body);
-
   if(error) return res.status(400).send(error.details[0]);
 
-  const flavorProfiles = {
-    id: flavorProfiles.length + 1,
-    name: req.body.flavorProfile
-  }
+  let fp = new flavourProfile({
+    flavourProfile: req.body.flavourProfile,
+  });
 
-  flavorProfiles.push(flavorProfile);
-  res.send(flavorProfiles);
+  fp = await fp.save();
+  res.send(fp);
 });
-
 
 
 const validationCheck = (args) => {
