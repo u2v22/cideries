@@ -8,11 +8,21 @@ const cideries = [
   { id: 1, name: 'cider1'},
   { id: 2, name: 'cider2'},
   { id: 3, name: 'cider3'}
+];
+
+const flavorProfiles = [
+  { id: 1, name: 'apple'},
+  { id: 2, name: 'rhubarb'},
+  { id: 3, name: 'pear'}
 ]
 
 
 app.get('/api/cideries', (req, res) => {
   res.send(cideries);
+});
+
+app.get('/api/flavorProfiles', (req, res) => {
+  res.send(flavorProfiles);
 });
 
 app.get('/api/cideries/:id', (req, res) => {
@@ -48,7 +58,13 @@ app.put('/api/cideries/:id', (req, res) => {
 });
 
 app.delete('/api/cideries/:id', (req, res) => {
+  const cidery = cideries.find(cidery => cidery.id === parseInt(req.params.id));
+  if(!cidery) return res.status(404).send('not found');
 
+  const index = cideries.indexOf(cidery);
+  cideries.splice(index, 1);
+
+  res.send(cidery);
 });
 
 
