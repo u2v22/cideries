@@ -1,28 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const Joi = require('@hapi/joi');
+const { Cidery, validationCheck } = require('../models/cidery');
 
-
-const ciderySchema = mongoose.Schema({
-  name: { type: String, required: true },
-  address: String,
-  phoneNum: Number,
-  email: String,
-  website: String,
-  tastingRoom: Boolean,
-  onlineStore: { type: Boolean, default: false },
-  offSales: { type: Boolean, default: false },
-  est: Number,
-  socialMedia: { type: Boolean, default: false },
-});
-
-const Cidery = mongoose.model('Cidery', ciderySchema);
+////  GET  /////
 
 router.get('/', async(req, res) => {
   const cideries = await Cidery.find().sort('name');
   res.send(cideries);
 });
+
+////  GET:id  /////
 
 router.get('/:id', async(req, res) => {
   const cidery = await Cidery.findById(req.params.id)
@@ -31,6 +19,8 @@ router.get('/:id', async(req, res) => {
 
   res.send(cidery);
 });
+
+////  POST  /////
 
 router.post('/', async(req, res) => {
 
@@ -46,6 +36,8 @@ router.post('/', async(req, res) => {
   cidery = await cidery.save();
   res.send(cidery);
 });
+
+////  PUT  /////
 
 router.put('/:id', async(req, res) => {
   const { error } = validationCheck(req.body);
@@ -64,6 +56,8 @@ router.put('/:id', async(req, res) => {
   res.send(cidery);
 });
 
+////  DELETE  /////
+
 router.delete('/:id', async(req, res) => {
   const cidery = await Cidery.findByIdAndRemove(req.params.id)
 
@@ -72,15 +66,5 @@ router.delete('/:id', async(req, res) => {
   res.send(cidery);
 });
 
-const validationCheck = (args) => {
-  const schema = Joi.object().keys({
-    name: Joi.string().min(3).required(),
-    address: Joi.string(),
-    phoneNum: Joi.number()
-  });
-
-  return schema.validate(args);
-}
 
 module.exports = router;
-
