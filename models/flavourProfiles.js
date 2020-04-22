@@ -7,6 +7,21 @@ const flavoursSchema = mongoose.Schema({
 
 const FlavourProfiles = mongoose.model('FlavourProfile', flavoursSchema);
 
+async function createFP() {
+  const FP = new FlavourProfiles({
+    flavourProfile: 'Apple and Grapefruit',
+  });
+  try {
+    const result = await FP.save();
+    console.log(result);
+  }
+  catch(err) {
+    console.log(err);
+  }
+}
+
+// createFP();
+
 const validationCheck = (args) => {
   const schema = Joi.object().keys({
     flavourProfile: Joi.string().min(3).required()

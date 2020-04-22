@@ -12,6 +12,7 @@ const ciderySchema = mongoose.Schema({
   offSales: { type: Boolean, default: false },
   est: Number,
   socialMedia: { type: Boolean, default: false },
+  flavourProfile: { type: mongoose.Schema.Types.ObjectId, ref: 'FlavourProfile' }
 });
 
 const Cidery = mongoose.model('Cidery', ciderySchema);
@@ -28,6 +29,7 @@ async function createCidery() {
     offSales: true,
     est: 1987,
     socialMedia: true,
+    flavourProfile: '5ea0abf4c50b4f30dc3c33e4'
   });
 
   try {
@@ -38,6 +40,8 @@ async function createCidery() {
     console.log(err);
   }
 }
+
+// createCidery();
 
 const validationCheck = (args) => {
   const schema = Joi.object().keys({

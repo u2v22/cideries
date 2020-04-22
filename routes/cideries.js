@@ -6,7 +6,10 @@ const { Cidery, validationCheck } = require('../models/cidery');
 ////  GET  /////
 
 router.get('/', async(req, res) => {
-  const cideries = await Cidery.find().sort('name');
+  const cideries = await Cidery
+    .find()
+    .sort('name')
+    .populate('flavourProfile');
   res.send(cideries);
 });
 
