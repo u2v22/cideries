@@ -3,7 +3,9 @@ const Joi = require('@hapi/joi');
 
 const ciderySchema = mongoose.Schema({
   name: { type: String, required: true },
-  address: String,
+  province: String,
+  city: String,
+  street: String,
   phoneNum: Number,
   email: String,
   website: String,
@@ -20,7 +22,9 @@ const Cidery = mongoose.model('Cidery', ciderySchema);
 async function createCidery() {
   const cidery = new Cidery({
     name: 'Vees Cidery',
-    address: '456 Easy Street',
+    province: 'Alberta',
+    city: 'Calgary',
+    street: '456 Easy Street',
     phoneNum: 4035555555,
     email: 'info@v.com',
     website: 'www.v.com',
@@ -46,7 +50,7 @@ async function createCidery() {
 const validationCheck = (args) => {
   const schema = Joi.object().keys({
     name: Joi.string().min(3).required(),
-    address: Joi.string(),
+    province: Joi.string().required(),
     phoneNum: Joi.number()
   });
 
