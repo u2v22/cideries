@@ -9,7 +9,8 @@ router.get('/', async(req, res) => {
   const cideries = await Cidery
     .find()
     .sort('name')
-    .populate('flavourProfile');
+    .populate('flavourProfile')
+    .populate('address');
   res.send(cideries);
 });
 
