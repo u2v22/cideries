@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 // Internal Imports
 const cideries = require('./routes/cideries');
 const flavourProfiles = require('./routes/flavourProfiles');
+const ciders = require('./routes/ciders');
 
 // Config
 const app = express();
@@ -15,6 +16,7 @@ mongoose.connect('mongodb://localhost/ciders', { useNewUrlParser: true, useUnifi
 app.use(express.json());
 app.use('/api/cideries', cideries);
 app.use('/api/flavourProfiles', flavourProfiles);
+app.use('/api/ciders', ciders);
 
 const port = process.env.PORT || 3000;
 
