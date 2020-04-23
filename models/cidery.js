@@ -58,4 +58,5 @@ const validationCheck = (args) => {
 }
 
 module.exports.Cidery = Cidery;
+module.exports.ciderySchema = ciderySchema;
 module.exports.validationCheck = validationCheck;

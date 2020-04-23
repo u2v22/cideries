@@ -30,5 +30,6 @@ const validationCheck = (args) => {
   return schema.validate(args);
 }
 
+module.exports.flavoursSchema = flavoursSchema;
 module.exports.FlavourProfiles = FlavourProfiles;
 module.exports.validationCheck = validationCheck;

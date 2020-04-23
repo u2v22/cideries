@@ -1,9 +1,17 @@
 const mongoose = require('mongoose');
 const Joi = require('@hapi/joi');
+const { flavoursSchema } = require('./flavourProfiles');
+const { ciderySchema } = require('./cidery');
 
 const ciderSchema = mongoose.Schema({
-  name: { type: String, required: true },
-  madeBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Cidery' },
+  name: {
+    type: String,
+    required: true
+  },
+  cidery: {
+    type: ciderySchema,
+    required: true
+  },
   story: String,
   awards: String, // array
   gluten: String,
@@ -14,44 +22,20 @@ const ciderSchema = mongoose.Schema({
   hops: Boolean, // array,
   drynessStyle: String, // Object
   notes: String,
-  flavourProfile: { type: mongoose.Schema.Types.ObjectId, ref: 'FlavourProfile' },
+  flavourProfile: {
+    type: flavoursSchema,
+    required: true
+  },
   image: String
 });
 
 const Cider = mongoose.model('Cider', ciderSchema);
 
-async function createCider() {
-  const cider = new Cider({
-    name: 'Ravenous Red',
-    madeBy: '5e9f295ba755bd06e50658ad',
-    story: 'Bla bla bla',
-    awards: 'Gold', // array
-    gluten: 'Gluten Free',
-    sulphites: 'No added sulphites',
-    ABV: 5.5,
-    apples: 'Gala', // array
-    yeast: 'Champagne',
-    hops: false, // array,
-    drynessStyle: 'Dry', // Object
-    notes: 'Cinnamon and nutmeg',
-    image: 'www.image.com',
-    flavourProfile: '5ea0abf4c50b4f30dc3c33e4'
-  });
-
-  try {
-    const result = await cider.save();
-    console.log(result);
-  }
-  catch(err) {
-    console.log(err);
-  }
-}
-
-createCider();
-
 const validationCheck = (args) => {
   const schema = Joi.object().keys({
-    name: Joi.string().min(3).required()
+    name: Joi.string().min(3).required(),
+    cideryId: Joi.string().required(),
+    flavourProfileId: Joi.string().required()
   });
 
   return schema.validate(args);

@@ -29,9 +29,23 @@ router.post('/', async(req, res) => {
   const { error } = validationCheck(req.body);
   if(error) return res.status(400).send(error.details[0]);
 
+  const madeBy = await Cidery.findById(req.body.cideryId)
+  if (!madeBy) return res.status('400').send('Cidery not found');
+
+  const flavourProfile = await FlavourProfile.findById(req.body.flavourProfileId);
+  if (!flavourProfile) return res.status('400').send('Flavour profile not found');
+
   let cider = new Cider({
     name: req.body.name,
-  })
+    madeBy: {
+      _id: madeBy.id,
+      name: madeBy.name
+    },
+    flavourProfile: {
+      _id: flavourProfile.id,
+      flavourProfile: flavourProfile.flavourProfile
+    }
+  });
 
   cider = await cider.save();
   res.send(cider);
