@@ -11,6 +11,7 @@ const flavourProfiles = require('./routes/flavourProfiles');
 const ciders = require('./routes/ciders');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
+const error = require('./middleware/error');
 
 // Config
 const app = express();
@@ -35,6 +36,8 @@ app.use('/api/flavourProfiles', flavourProfiles);
 app.use('/api/ciders', ciders);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
+
+app.use(error);
 
 const port = process.env.PORT || 3000;
 
