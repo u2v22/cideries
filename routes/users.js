@@ -48,7 +48,8 @@ router.post('/register', async(req, res) => {
 
   await user.save();
 
-  res.send(_.pick(user, ['_id', 'name', 'email']));
+  const token = jwt.sign({ _id: user._id }, process.env.JWT_PRIVATE_KEY);
+  res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']));
 });
 
 ////  PUT  /////
