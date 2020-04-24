@@ -11,6 +11,7 @@ const bcrypt = require('bcrypt');
 router.get('/all', async(req, res) => {
 
   const user = await User.find();
+  throw new Error('Could not get all users');
   res.send(user);
 
 });

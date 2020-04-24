@@ -1,5 +1,13 @@
 const winston = require('winston');
 
+process.on('uncaughtException', (ex) => {
+  throw ex;
+});
+
+winston.handleExceptions(
+  new winston.transports.File({ filename: 'exceptions.log'})
+);
+
 const logger = winston.createLogger({
   level: 'info',
   format: winston.format.json(),
@@ -10,7 +18,6 @@ const logger = winston.createLogger({
 });
 
 module.exports = function(err, req, res, next) {
-  // winston.error(err.message, err)
   logger.log({
     level: 'info',
     message: err.message
