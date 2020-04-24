@@ -5,31 +5,30 @@ const mongoose = require('mongoose');
 const { User, validationCheck } = require('../models/user');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
-const asyncMiddleware = require('../middleware/async');
 
 ////  GET  /////
 
-router.get('/all', asyncMiddleware(async(req, res) => {
+router.get('/all', async(req, res) => {
 
   const user = await User.find();
   res.send(user);
 
-}));
+});
 
 
 ////  GET:id  /////
 
-router.get('/me', auth, asyncMiddleware(async(req, res, next) => {
+router.get('/me', auth, async(req, res) => {
 
   const user = await User.findById(req.user._id).select('-password');
   res.send(user);
 
-}));
+});
 
 
 ////  POST  /////
 
-router.post('/register', asyncMiddleware(async(req, res, next) => {
+router.post('/register', async(req, res) => {
 
   const { error } = validationCheck(req.body);
   if(error) return res.status(400).send(error.details[0]);
@@ -48,12 +47,12 @@ router.post('/register', asyncMiddleware(async(req, res, next) => {
 
   const token = user.generateAuthToken();
   res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email', 'isAdmin', 'isBusiness']));
-}));
+});
 
 
 ////  PUT  /////
 
-router.put('/me', auth, asyncMiddleware(async(req, res, next) => {
+router.put('/me', auth, async(req, res) => {
 
   const { error } = validationCheck(req.body);
   if(error) return res.status(400).send(error.details[0]);
@@ -72,17 +71,17 @@ router.put('/me', auth, asyncMiddleware(async(req, res, next) => {
   res.send(_.pick(user, ['_id', 'name', 'email']));
 
   if(!user) res.send(`Failed to update user.`);
-}));
+});
 
 
 ////  DELETE  /////
 
-router.delete('/:id', asyncMiddleware(async(req, res, next) => {
+router.delete('/:id', async(req, res) => {
   const user = await User.findByIdAndRemove(req.params.id)
   res.send(user);
 
   if(!user) res.status(404).send('not found');
-}));
+});
 
 
 module.exports = router;
