@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Joi = require('@hapi/joi');
-// const { userSchema } = require('./users');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -19,11 +18,19 @@ const userSchema = mongoose.Schema({
     minlength: 8,
     maxlength: 1024,
     required: true
+  },
+  isAdmin: {
+    type: Boolean,
+    default:false
+  },
+  isBusiness: {
+    type: Boolean,
+    default: false
   }
 });
 
 userSchema.methods.generateAuthToken = function(){
-  const token = jwt.sign({ _id: this._id }, process.env.JWT_PRIVATE_KEY);
+  const token = jwt.sign({ _id: this._id, isAdmin: this.isAdmin, isBusiness: this.isBusiness }, process.env.JWT_PRIVATE_KEY);
   return token;
 }
 

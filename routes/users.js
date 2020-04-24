@@ -47,7 +47,7 @@ router.post('/register', async(req, res) => {
   await user.save();
 
   const token = user.generateAuthToken();
-  res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']));
+  res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email', 'isAdmin', 'isBusiness']));
 });
 
 ////  PUT  /////
@@ -62,8 +62,6 @@ router.put('/me', auth, async(req, res) => {
     const updatedPassword = await bcrypt.hash(req.body.password, salt);
     console.log(req.body.password);
     console.log(updatedPassword);
-
-    // const user = await User.findById(req.user._id).select('-password');
 
     const user = await User.findByIdAndUpdate(
       req.user._id, {
