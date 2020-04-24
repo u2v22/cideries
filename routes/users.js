@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const { User, validationCheck } = require('../models/user');
+const _ = require('lodash');
 
 ////  GET  /////
 
@@ -38,14 +39,11 @@ router.post('/register', async(req, res) => {
     return res.status(404).send('User not found');
   }
 
-  user = new User({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-  });
+  user = new User( _.pick(req.body, 'name', 'email', 'password'));
 
-  user = await user.save();
-  res.send(user);
+  await user.save();
+
+  res.send(_.pick(user, ['_id', 'name', 'email']));
 });
 
 ////  PUT  /////
@@ -54,17 +52,16 @@ router.put('/:id', async(req, res) => {
   const { error } = validationCheck(req.body);
   if(error) return res.status(400).send(error.details[0]);
 
-  try{
-    const user = await User.findByIdAndUpdate(
-      req.params.id,
-      { name: req.body.name },
-      { new: true });
+  let user = await User.findByIdAndUpdate(
+    req.params.id,
+    { name: req.body.name, email: req.body.email, password: req.body.password },
+    { new: true });
+  try {
+    res.send(_.pick(user, ['_id', 'name', 'email']));
   }
   catch(err) {
     return res.status(404).send(`user with id ${req.params.id} was not found`);
   }
-
-  res.send(user);
 });
 
 ////  DELETE  /////
