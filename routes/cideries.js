@@ -1,3 +1,5 @@
+const auth = require('../middleware/auth');
+const business = require('../middleware/business');
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
@@ -25,7 +27,7 @@ router.get('/:id', async(req, res) => {
 
 ////  POST  /////
 
-router.post('/', async(req, res) => {
+router.post('/', [auth, business], async(req, res) => {
 
   const { error } = validationCheck(req.body);
   if(error) return res.status(400).send(error.details[0]);
@@ -42,7 +44,7 @@ router.post('/', async(req, res) => {
 
 ////  PUT  /////
 
-router.put('/:id', async(req, res) => {
+router.put('/:id', auth, async(req, res) => {
   const { error } = validationCheck(req.body);
   if(error) return res.status(400).send(error.details[0]);
 
@@ -61,7 +63,7 @@ router.put('/:id', async(req, res) => {
 
 ////  DELETE  /////
 
-router.delete('/:id', async(req, res) => {
+router.delete('/:id', auth, async(req, res) => {
   const cidery = await Cidery.findByIdAndRemove(req.params.id)
 
   if(!cidery) return res.status(404).send('not found');
