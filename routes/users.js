@@ -5,7 +5,6 @@ const { User, validationCheck } = require('../models/user');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
 
-
 ////  GET  /////
 
 router.get('/all', async(req, res) => {
@@ -48,7 +47,7 @@ router.post('/register', async(req, res) => {
 
   await user.save();
 
-  const token = jwt.sign({ _id: user._id }, process.env.JWT_PRIVATE_KEY);
+  const token = user.generateAuthToken();
   res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']));
 });
 
@@ -63,6 +62,7 @@ router.put('/:id', async(req, res) => {
     { name: req.body.name, email: req.body.email, password: req.body.password },
     { new: true });
   try {
+    // add jwt token
     res.send(_.pick(user, ['_id', 'name', 'email']));
   }
   catch(err) {

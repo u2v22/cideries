@@ -6,7 +6,7 @@ const { User } = require('../models/user');
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const Joi = require('@hapi/joi');
-require('dotenv').config()
+require('dotenv').config();
 
 ////  POST  /////
 
@@ -31,7 +31,7 @@ router.post('/login', async(req, res) => {
   }
   catch(err) { return err.msg; }
 
-  const token = jwt.sign({ _id: user._id }, process.env.JWT_PRIVATE_KEY);
+  const token = user.generateAuthToken();
   return res.status(200).send(token);
 
 });
