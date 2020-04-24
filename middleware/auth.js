@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-module.exports = (req, res, next) => {
+module.exports = function(req, res, next) {
 
   const token = req.header('x-auth-token');
 
@@ -13,6 +13,6 @@ module.exports = (req, res, next) => {
     next();
   }
   catch(err) {
-    return res.status(400).send(`Invalid token: ${err.message}`);
+    res.status(400).send(`Invalid token.`);
   }
 };

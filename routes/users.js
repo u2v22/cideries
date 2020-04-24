@@ -1,3 +1,4 @@
+const auth = require('../middleware/auth');
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
@@ -15,10 +16,8 @@ router.get('/all', async(req, res) => {
 
 ////  GET:id  /////
 
-router.get('/:id', async(req, res) => {
-  const user = await User.findById(req.params.id)
-
-  if(!user) return res.status(404).send('not found');
+router.get('/me', auth, async(req, res) => {
+  const user = await User.findById(req.user._id).select('-password');
 
   res.send(user);
 });
@@ -53,21 +52,33 @@ router.post('/register', async(req, res) => {
 
 ////  PUT  /////
 
-router.put('/:id', async(req, res) => {
-  const { error } = validationCheck(req.body);
-  if(error) return res.status(400).send(error.details[0]);
+router.put('/me', auth, async(req, res) => {
 
-  let user = await User.findByIdAndUpdate(
-    req.params.id,
-    { name: req.body.name, email: req.body.email, password: req.body.password },
-    { new: true });
   try {
-    // add jwt token
-    res.send(_.pick(user, ['_id', 'name', 'email']));
+    const { error } = validationCheck(req.body);
+    if(error) return res.status(400).send(error.details[0]);
+
+    const salt = await bcrypt.genSalt(10);
+    const updatedPassword = await bcrypt.hash(req.body.password, salt);
+    console.log(req.body.password);
+    console.log(updatedPassword);
+
+    // const user = await User.findById(req.user._id).select('-password');
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id, {
+        name: req.body.name,
+        password: updatedPassword,
+        email: req.body.password
+      },
+      { new: true });
+
+      res.send(_.pick(user, ['_id', 'name', 'email']));
   }
   catch(err) {
-    return res.status(404).send(`user with id ${req.params.id} was not found`);
+    return res.send(`Failed to update user: ${err.message}`);
   }
+
 });
 
 ////  DELETE  /////
