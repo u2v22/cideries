@@ -10,6 +10,7 @@ const cideries = require('./routes/cideries');
 const flavourProfiles = require('./routes/flavourProfiles');
 const ciders = require('./routes/ciders');
 const users = require('./routes/users');
+const auth = require('./routes/auth');
 
 // Config
 const app = express();
@@ -33,6 +34,7 @@ app.use('/api/cideries', cideries);
 app.use('/api/flavourProfiles', flavourProfiles);
 app.use('/api/ciders', ciders);
 app.use('/api/users', users);
+app.use('/api/auth', auth);
 
 const port = process.env.PORT || 3000;
 
