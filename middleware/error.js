@@ -1,12 +1,19 @@
 const winston = require('winston');
 
+
+winston.exceptions.handle(
+  new winston.transports.File({
+    filename: 'exceptions.log'
+  }),
+  new winston.transports.Console({
+    colorize: true,
+    prettyPrint: true
+  })
+);
+
 process.on('uncaughtException', (ex) => {
   throw ex;
 });
-
-winston.handleExceptions(
-  new winston.transports.File({ filename: 'exceptions.log'})
-);
 
 const logger = winston.createLogger({
   level: 'info',
