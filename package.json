@@ -6,7 +6,7 @@
   "author": "V.H.Wajda",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "jest --watchAll --verbose",
+    "test": "jest --watchAll --verbose --colors",
     "seed": "node data/seedCiders.js"
   },
   "license": "MIT",
@@ -27,6 +27,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "@shelf/jest-mongodb": "^1.1.5",
     "faker": "^4.1.0",
     "jest": "^25.4.0"
   }

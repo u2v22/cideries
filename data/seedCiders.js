@@ -6,7 +6,6 @@ const csv = require('csv-parser');
 const fs = require('fs');
 
 module.exports = function createCider() {
-
   try {
     const results = [];
     fs.createReadStream(__dirname + '/googleSheets.csv')
