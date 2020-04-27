@@ -15,6 +15,7 @@ require('./startup/config')();
 require('./data/seedUsers.js')();
 require('./data/seedCiders.js')();
 require('./data/seedCideries.js')();
+require('./data/seedFlavours.js')();
 
 app.use(helmet());
 
