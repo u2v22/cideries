@@ -22,10 +22,6 @@ const userSchema = mongoose.Schema({
   isAdmin: {
     type: Boolean,
     default:false
-  },
-  isBusiness: {
-    type: Boolean,
-    default: false
   }
 });
 

@@ -13,8 +13,7 @@ const ciderySchema = mongoose.Schema({
   onlineStore: { type: Boolean, default: false },
   offSales: { type: Boolean, default: false },
   est: Number,
-  socialMedia: { type: Boolean, default: false },
-  flavourProfile: { type: mongoose.Schema.Types.ObjectId, ref: 'FlavourProfile' }
+  socialMedia: { type: Boolean, default: false }
 });
 
 const Cidery = mongoose.model('Cidery', ciderySchema);

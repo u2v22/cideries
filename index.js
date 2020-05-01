@@ -11,6 +11,12 @@ require('./startup/routes')(app);
 require('./startup/db')();
 require('./startup/config')();
 
+// Seed
+require('./data/seedUsers.js')();
+require('./data/seedCiders.js')();
+require('./data/seedCideries.js')();
+require('./data/seedFlavours.js')();
+
 app.use(helmet());
 
 const port = process.env.PORT || 3000;

@@ -8,10 +8,11 @@ const ciderSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  cidery: {
-    type: ciderySchema,
-    required: true
-  },
+  cidery: String,
+  // cidery: {
+  //   type: ciderySchema,
+  //   required: true
+  // },
   story: String,
   awards: String, // array
   gluten: String,
@@ -19,13 +20,14 @@ const ciderSchema = mongoose.Schema({
   ABV: Number,
   apples: String, // array
   yeast: String,
-  hops: Boolean, // array,
+  hops: String, // array,
   drynessStyle: String, // Object
   notes: String,
-  flavourProfile: {
-    type: flavoursSchema,
-    required: true
-  },
+  flavourProfile: String,
+  // flavourProfile: {
+  //   type: flavoursSchema,
+  //   required: true
+  // },
   image: String
 });
 
